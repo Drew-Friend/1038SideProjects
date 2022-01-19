@@ -4,29 +4,34 @@
  * Dividing by 4 gives 255-0, which is the correct range for PWM outputs  
  * See bottom for full wiring
 */
-
+#include <Servo.h>
 int POT_IN = A0;  //A0  pin, when looking at the board
 int MTR_OUT = 11; //D11 pin, when looking at the board
+Servo vic;
 int val = 0;
 
 void setup() {
   //Set Pot data line to input
   pinMode(POT_IN, INPUT);
   //Default the motor to neutral
-  analogWrite(MTR_OUT, val/4);
+  //analogWrite(MTR_OUT, val/4);
   //All serial lines are debug-specific
+  vic.attach(MTR_OUT);
   Serial.begin(115200);
 
 }
 
 void loop() {
   //Recieve value 0-1023
+  
   val = analogRead(POT_IN);
-  val /= 4;
-  if(117 < val && val < 137) {val = 127;}
+  val = map(val, 0, 1023, 40, 145);
+  if(86 < val && val < 99) {val = 92;}
   Serial.println(val);
+  vic.write(val);
+  //val /= 4;
   //Send value 0-255
-  analogWrite(MTR_OUT, val);
+  //analogWrite(MTR_OUT, val);
 }
 
 /*
